@@ -15,7 +15,7 @@
 ```yaml
 roles:
   - {
-    roles: traefik,
+    roles: francomile.traefik,
     # loopback alias requires to run netpoan role first.
     netplan_loopback_alias_ip: "100.64.64.64",
     # traefik.yml template variables
