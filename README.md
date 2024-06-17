@@ -1,5 +1,9 @@
 # Ansible Traefik Role
 
+[![Lint Ansible roles](https://github.com/francomile/ansible-role-traefik/actions/workflows/ansible_lint.yml/badge.svg)](https://github.com/francomile/ansible-role-traefik/actions/workflows/ansible_lint.yml)
+
+[![Release role to Ansible Galaxy](https://github.com/francomile/ansible-role-traefik/actions/workflows/push_to_galaxy.yml/badge.svg)](https://github.com/francomile/ansible-role-traefik/actions/workflows/push_to_galaxy.yml)
+
 ## Actions
 
 - Install Traefik Docker
