@@ -26,5 +26,5 @@ galaxy_info:
     - reverse-proxy
     - load-balancer
 dependencies:
-  - role: fracomile.docker
-  - role: fracomile.localhost
+  - role: francomile.docker
+  - role: francomile.localhost

@@ -50,4 +50,4 @@
   notify: "Update traefik"
 
 - name: "Start traefik"
-  ansible.builtin.command: "docker-compose -f /opt/traefik/docker-compose.yaml up -d"
+  ansible.builtin.command: "docker compose -f /opt/traefik/docker-compose.yaml up -d"
