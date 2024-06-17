@@ -1,0 +1,35 @@
+services:
+  traefik:
+    image: "{{ traefik_image }}"
+    command: --api.insecure=false
+    container_name: "traefik"
+    networks:
+      - {{ traefik_docker_network }}
+    ports:
+      - "{{ traefik_http_port }}:80"
+      - "{{ traefik_https_port }}:443"
+{% if traefik_prom_metrics_enabled %}
+      # Publish Prometheus metrics port
+      - "9082:9082"
+{% endif %}
+{% if traefik_dashboard_enabled  %}
+      # (Optional) Expose Dashboard
+      - "{{ localhost_loopback_alias_ip }}:8088:8088"  # Don't do this in production!
+{% endif %}
+    deploy:
+      replicas: {{ traefik_docker_replicas }}
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: {{ traefik_docker_cpu }}
+          memory: {{ traefik_docker_memory }}
+    volumes:
+      - {{ traefik_install_dir }}/config:/etc/traefik
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    logging:
+      driver: "journald"
+
+networks:
+  {{ traefik_docker_network }}:
+    external: true

@@ -1,0 +1,53 @@
+---
+- name: "Create {{ traefik_docker_network }}"
+  community.docker_network:
+    name: "{{ traefik_docker_network }}"
+
+- name: "Create {{ traefik_install_dir }} directory structure"
+  ansible.builtin.file:
+    path: "{{ traefik_install_dir }}/config/ssl"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "Copy ssl.crt file"
+  ansible.builtin.template:
+    src: "ssl.crt.j2"
+    dest: "{{ traefik_install_dir }}/config/ssl/ssl.crt"
+    owner: root
+    group: root
+    mode: 0640
+  notify: "Update traefik"
+  when: ( traefik_ssl_certificates_enabled | bool )
+
+- name: "Copy ssl.key file"
+  ansible.builtin.template:
+    src: "ssl.key.j2"
+    dest: "{{ traefik_install_dir }}/config/ssl/ssl.key"
+    owner: root
+    group: root
+    mode: 0600
+  notify: "Update traefik"
+  when: ( traefik_ssl_certificates_enabled | bool )
+
+- name: "Copy traefik.yml config file"
+  ansible.builtin.template:
+    src: "traefik.yml.j2"
+    dest: "{{ traefik_install_dir }}/config/traefik.yml"
+    owner: root
+    group: root
+    mode: 0644
+  notify: "Update traefik"
+
+- name: "Copy docker-compose.yaml file"
+  ansible.builtin.template:
+    src: "docker-compose.yaml.j2"
+    dest: "{{ traefik_install_dir }}/docker-compose.yaml"
+    owner: root
+    group: root
+    mode: 0644
+  notify: "Update traefik"
+
+- name: "Start traefik"
+  ansible.builtin.command: "docker-compose -f /opt/traefik/docker-compose.yaml up -d"

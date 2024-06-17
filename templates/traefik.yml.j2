@@ -1,0 +1,104 @@
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: false  # true by default
+
+# (Optional) Log information
+# ---
+log:
+  level: {{ traefik_log_level }}  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: {{ traefik_log_format }}  # common, json, logfmt
+#   filePath: /var/log/traefik/traefik.log
+
+# (Optional) Accesslog
+# ---
+accesslog:
+  format: {{ traefik_accesslog_format }}  # common, json, logfmt
+  # filePath: /var/log/traefik/access.log
+
+# (Optional) Enable API and Dashboard
+# ---
+api:
+  dashboard: {{ traefik_dashboard_enabled }}  # true by default
+  insecure: {{ traefik_dashboard_enabled_insecure }}  # Don't do this in production!
+
+# Entry Points configuration
+# ---
+entryPoints:
+  web:
+    address: :80
+
+{% if traefik_redirect_to_websecure %}
+    # (Optional) Redirect to HTTPS
+    # ---
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+{% endif %}
+
+  websecure:
+    address: :443
+
+# Prometheus metrics Entrypoint
+# ---
+{% if traefik_prom_metrics_enabled %}
+  metrics:
+    address: :9082
+{% endif %}
+
+# CertificateResolver
+# ---
+certificatesResolvers:
+{% if traefik_acme_staging_enabled %}
+  staging:
+    acme:
+      email: {{ traefik_certificasteresolvers_acme_email }}
+      storage: /etc/traefik/ssl/acme.json
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      httpChallenge:
+        entryPoint: web
+{% endif %}
+{% if traefik_acme_production_enabled %}
+  production:
+    acme:
+      email: {{ traefik_certificatesresolvers_acme_email }}
+      storage: /etc/traefik/ssl/acme.json
+      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+      httpChallenge:
+        entryPoint: web
+{% endif %}
+{% if traefik_ssl_certificates_enabled %}
+#(Optional) Overwrite Default Certificates
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /etc/traefik/ssl/ssl.crt
+        keyFile: /etc/traefik/ssl/ssl.key
+{% endif %}
+
+# Prometheus metrics export
+# ---
+{% if traefik_prom_metrics_enabled %}
+metrics:
+  prometheus:
+    entryPoint: metrics
+    addServicesLabels: true
+    addEntryPointsLabels: true
+    addRoutersLabels: true
+    buckets:
+      - 0.1
+      - 0.3
+      - 1.2
+      - 5.0
+{% endif %}
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false  # Default is true. Set the label in the services to enable it [traefik.enable=true]
+  file:
+    # watch for dynamic configuration changes
+    directory: /etc/traefik
+    watch: true

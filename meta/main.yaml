@@ -1,0 +1,30 @@
+---
+galaxy_info:
+  role_name: traefik
+  author: "Rubens Franco"
+  description: "Install and setup Traefik"
+  license: "GNU GENERAL PUBLIC LICENSE v2"
+  min_ansible_version: 2.9
+  platforms:
+    - name: Ubuntu
+      versions:
+        - "jammy"
+        - "focal"
+        - "bionic"
+    - name: Debian
+      versions:
+        - "bullseye"
+        - "buster"
+    - name: EL
+      versions:
+        - "9"
+        - "8"
+  galaxy_tags:
+    - traefik
+    - proxy
+    - http
+    - reverse-proxy
+    - load-balancer
+dependencies:
+  "francomile.docker": ">=1.0.0"
+  "fracomile.localhost": ">=1.0.0"

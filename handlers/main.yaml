@@ -1,0 +1,6 @@
+---
+- name: "Start traefik"
+  ansible.builtin.command: "docker-compose -f {{ traefik_install_dir }}/opt/traefik/docker-compose.yaml up -d"
+
+- name: "Update traefik"
+  ansible.builtin.command: "docker-compose -f {{ traefik_install_dir }}/docker-compose.yaml up -d --force-recreate --remove-orphans"

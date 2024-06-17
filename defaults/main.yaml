@@ -1,0 +1,25 @@
+---
+localhost_loopback_alias_ip: "100.64.64.64"
+traefik_image: "traefik:v2.7"
+traefik_install_dir: "/opt/traefik"
+# traefik.yml template variables
+traefik_log_level: "ERROR"
+traefik_log_format: "common" # common, json, logfmt
+traefik_accesslog_format: "common" # common, json, logfmt
+traefik_dashboard_enabled: false
+traefik_dashboard_enabled_insecure: false
+traefik_prom_metrics_enabled: true
+traefik_redirect_to_websecure: false
+traefik_ssl_certificates_enabled: false
+traefik_acme_production_enabled: false
+traefik_acme_staging_enabled: false
+traefik_ssl_cert: "cert"
+traefik_ssl_key: "key"
+traefik_certificatesresolvers_acme_email: "admin@example.com"
+# Docker compose variables
+traefik_http_port: 80
+traefik_https_port: 443
+traefik_docker_network: "traefik"
+traefik_docker_cpu: 1
+traefik_docker_memory: "2G"
+traefik_docker_replicas: 1
